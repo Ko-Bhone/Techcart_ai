@@ -39,3 +39,15 @@ def predict_product_category(model, product_data: pd.DataFrame):
 
     return prediction
 
+def load_model(model_name: str):
+    project_root = Path(__file__).resolve().parents[2]
+    model_paths = {
+        "logistic_regression":(project_root / "models" / "logistic_regression_classifier.joblib"),
+        "random_forest":(project_root / "models" / "random_forest_classifier.joblib")
+    }
+    if model_name not in model_paths:
+        raise ValueError(
+            f"Unknown model: {model_name}. "
+            f"Available models: {list(model_paths.keys())}"
+        )
+    return joblib.load(model_paths[model_name])
