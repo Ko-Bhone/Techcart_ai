@@ -1,0 +1,13 @@
+{
+  "feature_columns": [
+    "brand",
+    "price",
+    "stock",
+    "rating"
+  ],
+  "target_column": "category",
+  "selected_model": "Logistic Regression",
+  "logistic_validation_accuracy": 0.95,
+  "random_forest_validation_accuracy": 0.95,
+  "test_accuracy": 0.9
+}
