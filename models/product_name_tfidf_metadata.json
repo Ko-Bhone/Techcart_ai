@@ -1,0 +1,7 @@
+{
+  "model_name": "TF-IDF + Logistic Regression",
+  "text_column": "name",
+  "target_column": "category",
+  "test_accuracy": 1.0,
+  "random_state": 42
+}
