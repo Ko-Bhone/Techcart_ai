@@ -1,0 +1,9 @@
+{
+  "project": "TechCart AI",
+  "method": "Retrieval-Augmented Generation",
+  "embedding_model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "llm_model": "qwen2.5:3b",
+  "document_count": 196,
+  "vector_dimension": 384,
+  "vector_store": "product_catalog_vector_store.joblib"
+}
