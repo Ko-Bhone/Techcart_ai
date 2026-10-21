@@ -38,3 +38,17 @@ class ProductRead(BaseModel):
     stock : int | None = None
     rating : float | None = None
 
+class MLPredictionRequest(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+    brand : str | None = Field(default=None, max_length=200)
+    price : float | None = Field(default=None, ge=0)
+    stock : int | None = Field(default=None, ge=0)
+    rating : float | None = Field(default=None, ge=0, le=5)
+
+class MLPredictionResponse(BaseModel):
+
+    model_name : str
+    prediction_category : str
+    probabilities : dict[str, float] | None = None
+

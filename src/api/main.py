@@ -1,7 +1,6 @@
 from fastapi import FastAPI
-from src.api.routers import health
-from src.api.routers import products
-from src.api.routers import catalog
+from src.api.routers import health, products, catalog, ml
+
 
 app = FastAPI(
     title = "TechCart AI API",
@@ -12,3 +11,4 @@ app = FastAPI(
 app.include_router(health.router)
 app.include_router(products.router)
 app.include_router(catalog.router)
+app.include_router(ml.router)
