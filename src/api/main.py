@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from src.api.routers import health, products, catalog, ml
+from src.api.routers import health, products, catalog, ml, nlp
 
 
 app = FastAPI(
@@ -12,3 +12,4 @@ app.include_router(health.router)
 app.include_router(products.router)
 app.include_router(catalog.router)
 app.include_router(ml.router)
+app.include_router(nlp.router)

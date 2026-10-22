@@ -52,3 +52,14 @@ class MLPredictionResponse(BaseModel):
     prediction_category : str
     probabilities : dict[str, float] | None = None
 
+class NLPTextPredictionRequest(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+    product_name : str = Field(min_length=1, max_length=1000)
+
+class NLPTextPredictionResponse(BaseModel):
+    model_name : str
+    product_name : str
+    cleaned_text : str
+    predicted_category : str
+    probabilities : dict[str, float] | None = None
