@@ -27,7 +27,7 @@ def get_products(
         offset = offset
     )
 
-@router.get("/{product_id", response_model = ProductRead)
+@router.get("/{product_id}", response_model = ProductRead)
 def get_product_by_id(
         product_id : str,
         db : Session = Depends(get_db)):
