@@ -63,3 +63,36 @@ class NLPTextPredictionResponse(BaseModel):
     cleaned_text : str
     predicted_category : str
     probabilities : dict[str, float] | None = None
+
+class RAGQueryRequest(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+    question : str = Field(min_length=1, max_length=2000)
+    top_k : int = Field(default=4, ge=1, le=10)
+
+
+class RAGSource(BaseModel):
+
+    product_id : str | None = None
+    name : str | None = None
+    category : str | None = None
+    brand : str | None = None
+
+    price : float | None = None
+    stock : int | None = None
+    rating : float | None = None
+
+    similarity : float
+    document : str
+
+
+class RAGSearchResponse(BaseModel):
+    model_name : str
+    results : list[RAGSource]
+
+class RAGAnswerResponse(BaseModel):
+    model_name : str
+    answer : str
+    model_name : str
+    source : list[RAGSource]
+
