@@ -23,7 +23,7 @@ def format_source(result: dict) -> RAGSource:
         stock = metadata.get("stock"),
         rating = metadata.get("rating"),
         similarity = round(float(result["similarity"]), 4),
-        documents = result["document"],
+        document = result["document"],
     )
 
 

@@ -6,6 +6,7 @@ from fastapi import APIRouter, HTTPException
 from src.api.schemas import MLPredictionRequest, MLPredictionResponse
 
 
+
 router = APIRouter(
     prefix = "/ml",
     tags = ["Machine learning"])

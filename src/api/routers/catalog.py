@@ -21,7 +21,7 @@ def get_catalog_summary(db: Session = Depends(get_db)):
     ) or 0
 
     total_brands = db.scalar(
-        select(func.coalesce(func.sum(Product.stock),0))
+        select(func.count(func.distinct(Product.brand)))
     ) or 0
 
     total_stock = db.scalar(
@@ -37,7 +37,7 @@ def get_catalog_summary(db: Session = Depends(get_db)):
     ) or 0
 
     unknown_stock_products = db.scalar(
-        select(func.count()).select_from(Product).where(Product.stock.is_(Nonw))
+        select(func.count()).select_from(Product).where(Product.stock.is_(None))
     ) or 0
 
 

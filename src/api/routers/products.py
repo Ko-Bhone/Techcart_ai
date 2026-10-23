@@ -3,7 +3,8 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from src.api.dependencies import get_db
 from src.api.schemas import ProductCreate, ProductUpdate, ProductRead
-from src.database.crud import create_product, update_product, get_product, list_products, delete_product
+from src.database.crud import create_product, update_product, get_product, list_products
+from src.database.crud import delete_product as crud_delete_product
 
 router = APIRouter(
     prefix="/products",
@@ -79,7 +80,7 @@ def edit_product(
 @router.delete("/{product_id}", status_code = status.HTTP_204_NO_CONTENT)
 def delete_product(product_id : str, db: Session = Depends(get_db)):
 
-    deleted = delete_product(db, product_id)
+    deleted = crud_delete_product(db, product_id)
 
     if not deleted:
         raise HTTPException(

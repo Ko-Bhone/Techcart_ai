@@ -20,7 +20,7 @@ def health_check():
         with engine.connect() as connection:
             connection.execute(text("SELECT 1"))
         return {
-            "status" : "Healthy",
+            "status" : "healthy",
             "Database" : "Connected"
         }
 
