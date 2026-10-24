@@ -4,12 +4,14 @@ import joblib
 import pandas as pd
 from fastapi import APIRouter, HTTPException
 from src.api.schemas import MLPredictionRequest, MLPredictionResponse
-
+import logging
 
 
 router = APIRouter(
     prefix = "/ml",
     tags = ["Machine learning"])
+
+logger = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 MODELS_DIR = PROJECT_ROOT / "models"
@@ -44,6 +46,7 @@ def load_classifier():
 try:
     classifier, classifier_name = load_classifier()
 except Exception as error:
+    logger.exception("Classifier failed")
     raise RuntimeError(
         "Unable to load the trained ML classifier"
         "Check the models/ directory and classification_metadata.json"
@@ -63,8 +66,9 @@ def predict_category(payload: MLPredictionRequest):
 
         if hasattr(classifier, "predict_proba"):
             raw_probabilities = classifier.predict_proba(input_df)[0]
-
-            final_estimator = classifier.named_steps["classifier"]
+            print("Pipeline type:", type(classifier))
+            print("Pipeline steps:", getattr(classifier, "named_steps", None))
+            final_estimator = classifier.named_steps["model"]
             class_labels = final_estimator.classes_
 
             probabilities = {
@@ -77,8 +81,8 @@ def predict_category(payload: MLPredictionRequest):
             predicted_category = str(prediction),
             probabilities = probabilities
         )
-
     except Exception as error:
+        logger.exception("Prediction failed")
         raise HTTPException(
             status_code = 500,
             detail = "ML prediction failed, Check the server logs."

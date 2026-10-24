@@ -1,6 +1,30 @@
-numpy
-pandas
-scikit-learn
-matplotlib
-seaborn
-jupyter
+# API
+fastapi>=0.115,<1.0
+uvicorn[standard]>=0.30,<1.0
+pydantic>=2.8,<3.0
+
+# Database and environment configuration
+SQLAlchemy>=2.0,<3.0
+psycopg[binary]>=3.2,<4.0
+python-dotenv>=1.0,<2.0
+
+# Data processing and classical machine learning
+numpy>=2.0,<3.0
+pandas>=2.2,<4.0
+scikit-learn>=1.5,<2.0
+joblib>=1.4,<2.0
+
+# Deep learning, NLP embeddings, and RAG
+torch>=2.4,<3.0
+sentence-transformers>=3.0,<6.0
+requests>=2.32,<3.0
+
+# Notebooks and exploratory data analysis
+jupyter>=1.0,<2.0
+ipykernel>=6.29,<8.0
+matplotlib>=3.8,<4.0
+seaborn>=0.13,<1.0
+
+# Testing
+pytest>=8.0,<10.0
+httpx>=0.27,<1.0

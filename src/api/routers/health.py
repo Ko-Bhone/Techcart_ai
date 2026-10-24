@@ -1,8 +1,10 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from src.database.connection import engine
+import logging
 
+logger = logging.getLogger(__name__)
 router = APIRouter(
     tags=["Health"]
 )
@@ -10,7 +12,7 @@ router = APIRouter(
 @router.get("/")
 def root():
     return {
-        "Message" : "Welcome to TechCart AI API...",
+        "message" : "Welcome to TechCart AI API...",
         "docs" : "/docs"
     }
 
@@ -21,11 +23,12 @@ def health_check():
             connection.execute(text("SELECT 1"))
         return {
             "status" : "healthy",
-            "Database" : "Connected"
+            "database" : "connected"
         }
 
     except SQLAlchemyError as error:
-        raise HTTPException(
-            status_code = status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail = "Database Connection Failed"
-        ) from error
+        logger.exception("Health check failed")
+        return {
+            "status" : "unhealthy",
+            "database" : "disconnected"
+        }

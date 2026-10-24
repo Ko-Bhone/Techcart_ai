@@ -4,12 +4,14 @@ import joblib
 import pandas as pd
 from fastapi import APIRouter, HTTPException, status
 from src.api.schemas import NLPTextPredictionRequest, NLPTextPredictionResponse
-
+import logging
 
 router = APIRouter(
     prefix = "/nlp",
     tags = ["NLP"]
     )
+
+logger = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 MODEL_PATH = PROJECT_ROOT / "models" / "product_name_tfidf_classifier.joblib"
@@ -45,6 +47,7 @@ def load_nlp_model():
 try:
     nlp_model = load_nlp_model()
 except Exception as err:
+    logger.exception(f"NLP prediction failed!")
     raise RuntimeError(
         "Failed to load the NLP classifier"
         "Check the trained model file and Python environment"
@@ -63,10 +66,10 @@ def predict_text_category(payload: NLPTextPredictionRequest):
         )
     try:
         # The saved Pipeline performs TF-IDF transformation and classification together
-        prediction = nlp_model.predict(cleaned_text)[0]
+        prediction = nlp_model.predict([cleaned_text])[0]
         probabilities = None
         if hasattr(nlp_model, "predict_proba"):
-            raw_probabilities = nlp_model.predict_proba(cleaned_text)[0]
+            raw_probabilities = nlp_model.predict_proba([cleaned_text])[0]
 
             classifier = nlp_model.named_steps["classifier"]
             classes = classifier.classes_
@@ -86,6 +89,7 @@ def predict_text_category(payload: NLPTextPredictionRequest):
         )
 
     except Exception as error:
+        logger.exception(f"NLP prediction failed!")
         raise HTTPException(
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail = "NLP prediction failed. Check the API server logs"

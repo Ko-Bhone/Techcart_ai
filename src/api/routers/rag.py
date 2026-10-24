@@ -2,11 +2,14 @@ from fastapi import APIRouter, HTTPException, status
 from requests.exceptions import RequestException
 from src.api.schemas import RAGQueryRequest, RAGSource, RAGSearchResponse, RAGAnswerResponse
 from src.rag.service import retrieve_products, generate_rag_answer
+import logging
 
 router = APIRouter(
     prefix="/rag",
     tags=["RAG"]
 )
+
+logger = logging.getLogger(__name__)
 
 def format_source(result: dict) -> RAGSource:
     metadata = result["metadata"]
@@ -53,9 +56,12 @@ def ask_catalog(payload: RAGQueryRequest):
 
         return RAGAnswerResponse(
             question = result["question"],
-            answer = result["answer"],
+            answer = result ["answer"],
             model_name = result["model_name"],
-            sources = [format_source(item) for item in result["sources"]])
+            sources = [
+                format_source(item) for item in result["sources"]
+            ]
+        )
 
     except FileNotFoundError as error:
         raise HTTPException(
@@ -71,6 +77,7 @@ def ask_catalog(payload: RAGQueryRequest):
 
 
     except ValueError as error:
+        logger.exception("RAG / ask failed with ValueError")
         raise HTTPException(
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail = "RAG resources are invalid"

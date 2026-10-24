@@ -1,5 +1,68 @@
-.venv/
-__pycache__/
-*.pyc
+# Environment variables and secrets
 .env
+.env.*
+!.env.example
+
+# Python bytecode and virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+ENV/
+
+# Packaging / build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+wheels/
+
+# Test, coverage, lint, and type-check caches
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.mypy_cache/
+.pyre/
+.ruff_cache/
+
+# Jupyter and IPython local state
 .ipynb_checkpoints/
+.ipython/
+profile_default/
+
+# Editors and operating systems
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs and temporary files
+*.log
+logs/
+tmp/
+temp/
+*.tmp
+
+# Local caches / downloaded embedding-model caches
+.cache/
+huggingface_cache/
+sentence_transformers_cache/
+
+# Local database files (keep database source/configuration, not local DB files)
+*.sqlite
+*.sqlite3
+*.db
+
+# Keep required data/processed CSVs and model artifacts versionable for this project.
+# Ignore only temporary checkpoints or cache files if you create them.
+models/cache/
+models/checkpoints/

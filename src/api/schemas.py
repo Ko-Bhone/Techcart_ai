@@ -49,7 +49,7 @@ class MLPredictionRequest(BaseModel):
 class MLPredictionResponse(BaseModel):
 
     model_name : str
-    prediction_category : str
+    predicted_category : str
     probabilities : dict[str, float] | None = None
 
 class NLPTextPredictionRequest(BaseModel):
@@ -87,12 +87,15 @@ class RAGSource(BaseModel):
 
 
 class RAGSearchResponse(BaseModel):
-    model_name : str
+    question : str
+    model_name : str = "catalog-vector-search"
     results : list[RAGSource]
 
 class RAGAnswerResponse(BaseModel):
     model_name : str
     answer : str
     model_name : str
-    source : list[RAGSource]
+    source : list[RAGSource] = Field(default_factory = list)
+
+
 
