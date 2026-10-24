@@ -92,10 +92,10 @@ class RAGSearchResponse(BaseModel):
     results : list[RAGSource]
 
 class RAGAnswerResponse(BaseModel):
-    model_name : str
+    question : str
     answer : str
     model_name : str
-    source : list[RAGSource] = Field(default_factory = list)
+    sources : list[RAGSource] = Field(default_factory = list)
 
 
 
