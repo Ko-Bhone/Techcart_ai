@@ -319,7 +319,24 @@ ANSWER in Burmese:
     else:
         answer = ""
 
-    if (not answer or _answer_looks_repetitive(answer)):
+    comparison_keywords = (
+        "နှိုင်းယှဉ်",
+        "compare",
+        "comparison",
+        "cheapest",
+        "lowest price",
+        "ဈေးအနိမ့်ဆုံး",
+        "ဈေးအနိမ့်ဆုံး",
+        "stock အများဆုံး",
+        "best rated",
+        "rating အမြင့်ဆုံး"
+    )
+
+    is_comparison_question = any(
+        keyword in question.casefold() for keyword in comparison_keywords
+    )
+
+    if is_comparison_question or not answer or _answer_looks_repetitive(answer):
         answer = _format_product_answer(sources)
 
     return {
