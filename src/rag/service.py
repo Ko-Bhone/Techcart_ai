@@ -4,7 +4,6 @@ from pathlib import Path
 import joblib
 import numpy as np
 import requests
-from aiohttp import payload
 from sentence_transformers import SentenceTransformer
 from collections import Counter
 import os
@@ -169,21 +168,21 @@ def _answer_looks_repetitive(answer: str) -> bool:
     )
 
 def _format_product_answer(sources: list[dict]) -> str:
-
-    if not sources:
-        return "သက်ဆိုင်ရာ product အချက်အလက် မတွေ့ရှိပါ။"
+    """Build a readable answer directly from retrieved product metadata."""
 
     products = []
 
     for item in sources:
+        if not isinstance(item, dict):
+            continue
+
         metadata = item.get("metadata", {})
 
-        if metadata:
+        if isinstance(metadata, dict) and metadata:
             products.append(metadata)
 
     if not products:
-        return "Product အသေးစိတ်အချက်အလတ် မရရှိပါ"
-
+        return "သက်ဆိုင်ရာ product အချက်အလက် မတွေ့ရှိပါ။"
 
     def fmt(value):
         if value is None:
@@ -195,44 +194,55 @@ def _format_product_answer(sources: list[dict]) -> str:
             if number.is_integer():
                 return str(int(number))
 
-            return f"{number:.2f}".strip("0").strip(".")
+            return f"{number:.2f}".rstrip("0").rstrip(".")
+
         except (ValueError, TypeError):
             return str(value)
 
     lines = [
-        f"သက်ဆိုင်ရာ product {len(products)} ခုကို တွေ့ရှိပါတယ်", ""
+        f"သက်ဆိုင်ရာ product {len(products)} ခုကို တွေ့ရှိပါတယ်။",
+        "",
     ]
 
     for index, product in enumerate(products, start=1):
         lines.extend([
-            f"{index}. {product.get('name', 'Unknown Product')}",
-            f" Product ID : {fmt(product.get('product_id'))}",
-            f" Brand: {fmt(product.get('brand'))}",
-            f" Category: {fmt(product.get('category'))}",
-            f" Price: {fmt(product.get('price'))}",
-            f" stock: {fmt(product.get('stock'))}",
-            f" Rating: {fmt(product.get('rating'))}/5"
+            f"{index}. {product.get('name') or 'Unknown Product'}",
+            f"   Product ID: {fmt(product.get('product_id'))}",
+            f"   Brand: {fmt(product.get('brand'))}",
+            f"   Category: {fmt(product.get('category'))}",
+            f"   Price: {fmt(product.get('price'))}",
+            f"   Stock: {fmt(product.get('stock'))}",
+            f"   Rating: {fmt(product.get('rating') )}/5",
+            "",
         ])
 
+    # Find the lowest-priced product with a valid numeric price.
     valid_prices = []
 
     for product in products:
         try:
             price = float(product["price"])
+
             valid_prices.append((price, product))
+
         except (KeyError, TypeError, ValueError):
             continue
 
     if valid_prices:
-        price, cheapest = min(valid_prices, key=lambda item: item[0])
+        price, cheapest = min(
+            valid_prices,
+            key=lambda item: item[0],
+        )
 
         lines.extend([
-            "နှိုင်းယှဉ်ချက်",
-            (f"-စျေးအနိမ့်ဆုံး"
-             f"{cheapest.get('name', 'Unknown Product')}"
-             f"(ID: {fmt(cheapest.get('product_id'))})"
-             f"Price: {fmt(price)}"
-             )])
+            "နှိုင်းယှဉ်ချက်:",
+            (
+                f"- ဈေးအနိမ့်ဆုံး: "
+                f"{cheapest.get('name') or 'Unknown Product'} "
+                f"(Product ID: {fmt(cheapest.get('product_id'))}) "
+                f"— Price: {fmt(price)}"
+            ),
+        ])
 
     return "\n".join(lines)
 
